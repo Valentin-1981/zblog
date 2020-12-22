@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="article", indexes={@ORM\Index(name="category", columns={"category"})})
  * @ORM\Entity
  */
-class Article
+class Article_
 {
     /**
      * @var integer
