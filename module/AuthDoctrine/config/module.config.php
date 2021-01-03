@@ -2,6 +2,8 @@
 
 namespace AuthDoctrine;
 
+use Blog\Entity\User;
+
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -48,5 +50,23 @@ return array(
 
         'display_exceptions' => true,
 
+    ),
+
+    'doctrine' => array(
+        'authentication' => array (
+            'orm_default' => array(
+                'identity_class' => 'Blog\Entity\User',
+                'identity_property' => 'usrName',
+                'credential_property' => 'usrPassword',
+                'credential_callable' => function(User $user, $password){
+    //                if($user->getUsrPassword() == md5('staticSalt' . $password . $user->getUsrPasswordSalt())){
+                    if($user->getUsrPassword() == $password){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                },
+            ),
+        ),
     ),
 );

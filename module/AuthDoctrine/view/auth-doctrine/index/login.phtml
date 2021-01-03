@@ -8,11 +8,11 @@ if(empty($user)){
     $form = $this->form;
     $form->prepare();
 
-    echo $this->form->openTag($form);
+    echo $this->form()->openTag($form);
     echo $this->formRow($form->get('usrName'));
     echo $this->formRow($form->get('usrPassword'));
     echo $this->formSubmit($form->get('submit'));
-    echo $this->form->closeTag();
+    echo $this->form()->closeTag();
 
     echo 'Вход не выполнен';
 

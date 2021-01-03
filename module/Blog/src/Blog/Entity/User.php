@@ -9,7 +9,7 @@ use Zend\Form\Annotation;
  * User
  *
  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_1483A5E9DFDCDFE1", columns={"usr_name"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Blog\Entity\Repository\UserRepository")
  * @Annotation\Name("user")
  */
 class User
@@ -32,7 +32,7 @@ class User
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Attributes({"type":"text","class":"form-control","required":"required"})
      * @Annotation\Required({"required":"true"})
-     * @Annotations\Options({"label":"Логин:"})
+     * @Annotation\Options({"label":"Логин:"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":30}})
      */
     private $usrName;
@@ -42,7 +42,7 @@ class User
      *
      * @ORM\Column(name="usr_password", type="string", length=100, nullable=false)
      * @Annotation\Attributes({"type":"password", "class":"form-control", "required":"required"})
-     * @Annotations\Options({"label":"Пароль:"})
+     * @Annotation\Options({"label":"Пароль:"})
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Required({"required":"true"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":30}})
