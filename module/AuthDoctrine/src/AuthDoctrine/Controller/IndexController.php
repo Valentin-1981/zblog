@@ -8,6 +8,7 @@ use Blog\Entity\User;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Authentication\Result;
+use Zend\Session\SessionManager;
 
 class IndexController extends BaseController
 {
@@ -66,5 +67,20 @@ class IndexController extends BaseController
             'form' => $form,
             'messages' => $messages,
         );
+    }
+
+    public function logoutAction()
+    {
+        $auth = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+
+        if($auth->hasIdentity())
+        {
+            $identity = $auth->getIdentity();
+        }
+        $auth->clearIdentity();
+        $sessionManager = new SessionManager();
+        $sessionManager->forgetMe();
+
+        return $this->redirect()->toRoute('auth-doctrine/default', array('controller' => 'index', 'action' => 'login'));
     }
 }
