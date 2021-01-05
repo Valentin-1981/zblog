@@ -39,6 +39,16 @@ class IndexController extends BaseController
         return $form;
     }
 
+    protected function getRegForm(User $user)
+    {
+        $form = $this->getUserForm($user);
+        $form->setAttribute('action', '/auth-doctrine/index/register/');
+        $form->get('submit')->setAttribute('value', 'Зарегистрировать');
+        $form->get('usrEmail')->setAttribute('type', 'email');
+
+        return $form;
+    }
+
     public function loginAction(){
         $em = $this->getEntityManager();
         $user = new User();
@@ -82,5 +92,46 @@ class IndexController extends BaseController
         $sessionManager->forgetMe();
 
         return $this->redirect()->toRoute('auth-doctrine/default', array('controller' => 'index', 'action' => 'login'));
+    }
+
+    protected function prepareData($user)
+    {
+        $user->setUsrPasswordSalt(md5(time() . 'setUsrPasswordSalt'));
+        $user->setUsrPassword(md5('staticSalt' . $user->getUsrPassword() . $user->getUsrPasswordSalt()));
+
+        return $user;
+    }
+
+    public function registerAction()
+    {
+        $em = $this->getEntityManager();
+        $user = new User();
+
+        $form = $this->getRegForm($user);
+        $request = $this->getRequest();
+
+        if($request->isPost()){
+            $data = $request->getPost();
+            $form->setData($data);
+
+            $apiService = $this->getServiceLocator()->get('Admin\Service\IsExistValidator');
+
+            if($form->isValid()){
+                if($apiService->exists($user->getUsrName(), array('usrName'))){
+                    $this->flashMessenger()->addErrorMessage('Пользователь с таким именем существует - ' . $user->getUsrName());
+                        return $this->redirect()->toRoute('auth-doctrine/default', array('controller' => 'index', 'action' => 'register'));
+                }
+
+                $this->prepareData($user);
+//                $this->sendConfirmationEmail($user);
+
+                $em->persist($user);
+                $em->flush();
+
+                return $this->redirect()->toRoute('auth-doctrine/default', array('controller' => 'index', 'action' => 'registration-success'));
+            }
+        }
+
+        return array('form' => $form);
     }
 }
