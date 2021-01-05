@@ -59,8 +59,8 @@ return array(
                 'identity_property' => 'usrName',
                 'credential_property' => 'usrPassword',
                 'credential_callable' => function(User $user, $password){
-    //                if($user->getUsrPassword() == md5('staticSalt' . $password . $user->getUsrPasswordSalt())){
-                    if($user->getUsrPassword() == $password){
+                    if($user->getUsrPassword() == md5('staticSalt' . $password . $user->getUsrPasswordSalt())){
+//                    if($user->getUsrPassword() == $password){
                         return true;
                     }else{
                         return false;
